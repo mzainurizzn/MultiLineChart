@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom";
 import { usePlants } from "../../hooks/usePlants";
 import { usePlantOee } from "../../hooks/usePlantOee";
 import { useYtdLatest } from "../../hooks/useYtdLatest";
-
-import { useLandscape } from "../plants/hooks/useLandscape"; // atau path hook kamu
+import { useElementSize } from "./hooks/useElementSize";
 import MetricPagerCard from "./components/MetricPagerCard";
 import YearPickerModal from "./components/YearPickerModal";
 
@@ -24,7 +23,7 @@ export default function PlantDetailPage() {
   const border = "#ffffff14";
   const primary = "#1581BF";
 
-  const { isLandscape } = useLandscape();
+  const { isLandscape } = useElementSize();
 
   // =========================
   // Data sources

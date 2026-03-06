@@ -56,7 +56,7 @@ export default function MainLayout() {
     >
       {/* parent ukuran mobile */}
       <div
-        className="w-full max-w-[420px] rounded-2xl shadow overflow-hidden border"
+        className="w-full max-w-[900px] rounded-2xl shadow overflow-hidden border"
         style={{ background: pageBg, borderColor: "#ffffff14" }}
       >
         {/* Top Bar */}
@@ -85,12 +85,10 @@ export default function MainLayout() {
           <div className="text-sm font-extrabold text-white">OEE Wings</div>
 
           <div className="flex items-center gap-2">
-            <img
-              src={LogoWings}
-              alt="Wings"
-              className="h-7 w-7 rounded-md object-contain"
+            <img 
+            src={LogoWings} alt="Wings" 
+            className="h-7 w-7 rounded-md object-contain"
             />
-            {/* <div className="text-sm font-semibold text-white">{title}</div> */}
           </div>
         </div>
 
@@ -230,7 +228,7 @@ export default function MainLayout() {
 
             <div className="p-3 mt-auto">
               <div className="text-xs" style={{ color: subtle }}>
-                © {new Date().getFullYear()}
+                © Wings - MDT {new Date().getFullYear()}
               </div>
             </div>
           </aside>

@@ -79,9 +79,8 @@ function TooltipCard({
         borderRadius: 12,
         border: "1px solid #00000014",
         padding: 12,
-        maxWidth: 120,
         boxShadow: "0 10px 22px rgba(0,0,0,0.25)",
-        minWidth: 150,
+        minWidth: 220,
       }}
     >
       <div style={{ fontWeight: 900, color: "black", marginBottom: 8 }}>
@@ -89,22 +88,22 @@ function TooltipCard({
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, marginTop: 6 }}>
-        <div style={{ color: "black", opacity: 0.7,  fontSize:12 }}>Actual</div>
-        <div style={{ fontWeight: 900, color: "black", fontSize:12}}>
+        <div style={{ color: "black", opacity: 0.7 }}>Actual</div>
+        <div style={{ fontWeight: 900, color: "black" }}>
           {actual !== null ? `${actual.toFixed(1)}%` : "-"}
         </div>
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, marginTop: 6 }}>
-        <div style={{ color: "black", opacity: 0.7, fontSize:12 }}>Target</div>
-        <div style={{ fontWeight: 900, color: "black", fontSize:12 }}>
+        <div style={{ color: "black", opacity: 0.7 }}>Target</div>
+        <div style={{ fontWeight: 900, color: "black" }}>
           {target !== null ? `${target.toFixed(1)}%` : "-"}
         </div>
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, marginTop: 6 }}>
-        <div style={{ color: "black", opacity: 0.7,fontSize:12 }}>Gap</div>
-        <div style={{ fontWeight: 900, color: "black", fontSize:12 }}>
+        <div style={{ color: "black", opacity: 0.7 }}>Gap</div>
+        <div style={{ fontWeight: 900, color: "black" }}>
           {gap !== null ? `${gap.toFixed(1)}%` : "-"}
         </div>
       </div>
