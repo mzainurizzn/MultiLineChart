@@ -185,7 +185,7 @@ export default function MachineSpeedDetailPage() {
 
         
 
-      {/* CONTAINER HEADER 2 */}
+      {/* Header 2 */}
       <div className="w-full mx-auto mt-4" style={{ maxWidth: isLandscape ? "100%" : 1100 }}>
     
         <HeaderCard2
@@ -193,7 +193,6 @@ export default function MachineSpeedDetailPage() {
           border={border}
           primary={primary}
           isLandscape={isLandscape}
-          napkinCurrent={napkinCurrent}
           Line1={Line1}
           Line3={Line3}
           Line4={Line4}
