@@ -14,6 +14,7 @@ import mqtt from "mqtt";
 // chart kamu (web)
 import { BarChart } from "./components/BarChart";
 import { YearTotalBarChart } from "./components/YearTotalBarChart";
+import { HeaderCard2 } from "../plants/components/HeaderCard2";
 
 // coba line chart 
 import RealtimeMqttLineChart from "../plants/components/RealtimeMqttLineChart";
@@ -21,9 +22,12 @@ import RealtimeMqttLineChart1 from "../plants/components/RealtimeMqttLineChart1"
 
 import { useMqttOutputs } from "./hooks/useMqttOutputs";
 
+
 export default function MachineSpeedDetailPage() {
   const { id } = useParams<{ id: string }>();
   const slug = String(id ?? "");
+
+  
 
   // theme (samakan dengan Plants)
   const pageBg = "#0b1220";
@@ -54,7 +58,8 @@ export default function MachineSpeedDetailPage() {
   const ket_mounth_cu = ket?.ket_cu;
   const ket_mounth_oee = ket?.ket_oee;
 
-  const { napkinCurrent, napkinLast, pantsCurrent, pantsLast } = useMqttOutputs();
+  const { napkinCurrent, napkinLast, pantsCurrent, pantsLast,Line1,Line3,Line4,Line5, Line6, Line7, Line8, Line9, Line10, Line11 } = useMqttOutputs();
+  
 
   // =========================
   // Derived: years / selectedYear / yearData
@@ -186,18 +191,29 @@ export default function MachineSpeedDetailPage() {
         </div>
         </div>
 
-        {/* Modal Tahun */}
-        <YearPickerModal
-          open={yearOpen}
-          onClose={() => setYearOpen(false)}
-          years={years}
-          selectedYear={selectedYear}
-          onSelect={setSelectedYear}
-          pageBg={pageBg}
+        
+
+      {/* CONTAINER HEADER 2 */}
+      <div className="w-full mx-auto mt-4" style={{ maxWidth: isLandscape ? "100%" : 1100 }}>
+    
+        <HeaderCard2
           cardBg={cardBg}
           border={border}
           primary={primary}
+          isLandscape={isLandscape}
+          Line1={Line1}
+          Line3={Line3}
+          Line4={Line4}
+          Line5={Line5}
+          Line6={Line6}
+          Line7={Line7}
+          Line8={Line8}
+          Line9={Line9}
+          Line10={Line10}
+          Line11={Line11}
+        
         />
+      </div>
 
         {/* Charts */}
         {isLandscape ? (
@@ -253,59 +269,7 @@ export default function MachineSpeedDetailPage() {
               }
             />
 
-            <MetricPagerCard
-              title="Capacity Utilization"
-              isLandscape={true}
-              primary={primary}
-              pageBg={pageBg}
-              cardBg={cardBg}
-              border={border}
-              page={cuPage}
-              setPage={setCuPage}
-              height={PAGER_H}
-              monthly1={
-                selectedYear && yearData.length > 0 ? (
-                  <BarChart
-                    data={yearData}
-                    metric="cu"
-                    title={`CU (%) vs CU maks (${selectedYear})`}
-                    theme={{
-                      primary,
-                      barStart: primary,
-                      barEnd: `${primary}33`,
-                      targetLine: "#ff4d4f",
-                      targetLineDark: "#ffffff",
-                    }}
-                    targetLabelPos="right"
-                    targetLabelOffsetY={-5}
-                    yDomain={[0, 100]}
-                    ketPlant={ket_plant}
-                    ketKpi={ket_mounth_cu}
-                  />
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
-                )
-              }
-              monthly2={null}
-              yearly={
-                <YearTotalBarChart
-                  title="CYTD CU (%)"
-                  data={ytdSeries as any}
-                  metric="cu"
-                  mode="avg"
-                  ignoreZero
-                  years={ytdYears}
-                  yDomain={[10, 100]}
-                  theme={{
-                    barStart: primary,
-                    barEnd: `${primary}33`,
-                    labelDark: "white",
-                    labelLight: "black",
-                  }}
-                  ketYTD={ket_ytd_cu}
-                />
-              }
-            />
+            
           </div>
         ) : (
           <div className="space-y-5">

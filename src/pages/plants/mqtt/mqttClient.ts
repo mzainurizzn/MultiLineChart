@@ -1,25 +1,25 @@
-import mqtt from "mqtt";
+import mqtt, { MqttClient } from "mqtt";
 
-let client: mqtt.MqttClient | null = null;
+let client: MqttClient | null = null;
 
-export function getMqttClient(brokerUrl: string) {
+export function getMqttClient() {
   if (!client) {
-    client = mqtt.connect(brokerUrl, {
+    client = mqtt.connect("ws://172.17.173.164:443", {
       reconnectPeriod: 2000,
       connectTimeout: 5000,
       clean: true,
     });
 
     client.on("connect", () => {
-      console.log("MQTT connected");
+      console.log("MQTT Connected");
     });
 
     client.on("reconnect", () => {
-      console.log("MQTT reconnecting...");
+      console.log("MQTT Reconnecting...");
     });
 
     client.on("error", (err) => {
-      console.error("MQTT error", err);
+      console.error("MQTT Error", err);
     });
   }
 

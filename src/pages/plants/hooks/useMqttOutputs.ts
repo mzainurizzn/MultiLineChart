@@ -45,6 +45,7 @@ export function useMqttOutputs() {
     client.on("message", (topic, message) => {
       const value = Number(message.toString());
 
+
       setData((prev) => {
         switch (topic) {
           case "AMG/Speed/Current_Napkin":

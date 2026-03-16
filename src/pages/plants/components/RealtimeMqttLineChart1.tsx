@@ -1,4 +1,4 @@
-//Chart untuk Line Speed Mesin 3, 4 & 5
+//Chart untuk Line Speed Mesin 3, 4 & 5  + 7,8,9 & 10
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import mqtt, { MqttClient } from "mqtt";
