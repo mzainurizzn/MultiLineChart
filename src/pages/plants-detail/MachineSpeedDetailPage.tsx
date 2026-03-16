@@ -14,7 +14,7 @@ import mqtt from "mqtt";
 // chart kamu (web)
 import { BarChart } from "./components/BarChart";
 import { YearTotalBarChart } from "./components/YearTotalBarChart";
-import { HeaderCard2 } from "../plants/components/HeaderCard2";
+import { HeaderCard2 } from "./components/HeaderCard2";
 
 // coba line chart 
 import RealtimeMqttLineChart from "../plants/components/RealtimeMqttLineChart";
@@ -49,16 +49,9 @@ export default function MachineSpeedDetailPage() {
   const { data, loading, error, ket } = usePlantOee(plantName);
   const { data: ytdSeries, years: ytdYears, loading: ytdLoading } = useYtdLatest(plantName);
 
-  console.log("ytd series:", ytdSeries)
-  console.log("ytd years:", ytdYears)
+  ;
 
-  const ket_plant = ket?.ket_plant;
-  const ket_ytd_cu = ket?.ket_cu;
-  const ket_ytd_oee = ket?.ket_oee;
-  const ket_mounth_cu = ket?.ket_cu;
-  const ket_mounth_oee = ket?.ket_oee;
-
-  const { napkinCurrent, napkinLast, pantsCurrent, pantsLast,Line1,Line3,Line4,Line5, Line6, Line7, Line8, Line9, Line10, Line11 } = useMqttOutputs();
+  const { napkinCurrent, napkinLast, pantsCurrent, pantsLast,Line1 ,Line3 ,Line4 ,Line5, Line6, Line7, Line8, Line9, Line10, Line11 } = useMqttOutputs();
   
 
   // =========================
@@ -137,7 +130,7 @@ export default function MachineSpeedDetailPage() {
     <div className="relative min-h-screen p-4 pb-20 overflow-y-auto" style={{ background: pageBg }}>
       {/* container: portrait dibatasi, landscape full */}
       <div className="w-full mx-auto space-y-4" style={{ maxWidth: isLandscape ? "100%" : 1100 }}>
-        {/* Header */}
+        {/* Header 1 */}
         <div
           className="rounded-2xl border p-4 mx-auto"
           style={{
@@ -187,7 +180,6 @@ export default function MachineSpeedDetailPage() {
             <div className="text-white/60 text-xs">Last Day Output Pants</div>
             <div className="text-white font-extrabold text-lg">{pantsLast.toLocaleString("id-ID")}</div>
           </div>
-
         </div>
         </div>
 
@@ -201,6 +193,7 @@ export default function MachineSpeedDetailPage() {
           border={border}
           primary={primary}
           isLandscape={isLandscape}
+          napkinCurrent={napkinCurrent}
           Line1={Line1}
           Line3={Line3}
           Line4={Line4}
@@ -211,6 +204,8 @@ export default function MachineSpeedDetailPage() {
           Line9={Line9}
           Line10={Line10}
           Line11={Line11}
+
+          
         
         />
       </div>
@@ -218,57 +213,7 @@ export default function MachineSpeedDetailPage() {
         {/* Charts */}
         {isLandscape ? (
           <div className="mx-auto space-y-4" style={{ width: 600 }}>
-            <MetricPagerCard
-              title="Trend Speed Machine 1"
-              isLandscape={true}
-              primary={primary}
-              pageBg={pageBg}
-              cardBg={cardBg}
-              border={border}
-              page={oeePage}
-              setPage={setOeePage}
-              height={PAGER_H}
-              monthly1={
-                selectedYear && yearData.length > 0 ? (
-                //   
-                <></>
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
-                )
-              }
-              monthly2={null /* landscape gak butuh monthly2 */}
-              yearly={
-                // <YearTotalBarChart
-                //   title="YTD OEE (%)"
-                //   data={ytdSeries as any}
-                //   metric="oee"
-                //   mode="avg"
-                //   ignoreZero
-                //   years={ytdYears}
-                //   yDomain={[10, 100]}
-                //   theme={{
-                //     barStart: "#22c55e",
-                //     barEnd: "#22c55e33",
-                //     labelDark: "white",
-                //     labelLight: "black",
-                //   }}
-                //   ketYTD={ket_ytd_oee}
-                // />
-                <RealtimeMqttLineChart
-                  title="Trend Speed Machine 1"
-                  brokerUrl="ws://172.17.173.164:443"
-                  historyBaseUrl="http://172.17.173.164:1880"
-                  topic="AMG/Speed/Line1"
-                  // username="user"
-                  // password="pass"
-                  maxPoints={120}
-                  windowMinutes={10}
-                  height={320}
-                  lineName="Speed"
-                />
-              }
-            />
-
+            
             
           </div>
         ) : (
@@ -284,7 +229,7 @@ export default function MachineSpeedDetailPage() {
               setPage={setOeePage}
               height={PAGER_H}
               monthly1={
-                selectedYear && yearData.length > 0 ? (
+                 (
                   // <BarChart
                   //   data={yearData1}
                   //   metric="oee"
@@ -313,12 +258,10 @@ export default function MachineSpeedDetailPage() {
                     height={320}
                     lineName="Speed"
                   />
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
-                )
+                )  
               }
               monthly2={
-                selectedYear && yearData.length > 0 ? (
+                 (
                   <RealtimeMqttLineChart
                     title="Trend Speed Machine 6"
                     brokerUrl="ws://172.17.173.164:443"
@@ -331,8 +274,6 @@ export default function MachineSpeedDetailPage() {
                     height={320}
                     lineName="Speed"
                   />
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
                 )
               }
               yearly={
@@ -362,7 +303,7 @@ export default function MachineSpeedDetailPage() {
               setPage={setOeePage}
               height={PAGER_H}
               monthly1={
-                selectedYear && yearData.length > 0 ? (
+                (
                   // <BarChart
                   //   data={yearData1}
                   //   metric="oee"
@@ -391,12 +332,10 @@ export default function MachineSpeedDetailPage() {
                     height={320}
                     lineName="Speed"
                   />
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
-                )
+                ) 
               }
               monthly2={
-                selectedYear && yearData.length > 0 ? (
+                 (
                   <RealtimeMqttLineChart1
                     title="Trend Speed Machine 4"
                     brokerUrl="ws://172.17.173.164:443"
@@ -409,9 +348,7 @@ export default function MachineSpeedDetailPage() {
                     height={320}
                     lineName="Speed"
                   />
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
-                )
+                ) 
               }
               yearly={
                 <RealtimeMqttLineChart1
@@ -440,7 +377,7 @@ export default function MachineSpeedDetailPage() {
               setPage={setOeePage}
               height={PAGER_H}
               monthly1={
-                selectedYear && yearData.length > 0 ? (
+                 (
                   // <BarChart
                   //   data={yearData1}
                   //   metric="oee"
@@ -469,12 +406,10 @@ export default function MachineSpeedDetailPage() {
                     height={320}
                     lineName="Speed"
                   />
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
-                )
+                ) 
               }
               monthly2={
-                selectedYear && yearData.length > 0 ? (
+                 (
                   <RealtimeMqttLineChart1
                     title="Trend Speed Machine 8"
                     brokerUrl="ws://172.17.173.164:443"
@@ -487,9 +422,7 @@ export default function MachineSpeedDetailPage() {
                     height={320}
                     lineName="Speed"
                   />
-                ) : (
-                  <div className="p-4 text-white font-extrabold">No data available</div>
-                )
+                ) 
               }
               yearly={
                 <RealtimeMqttLineChart1
