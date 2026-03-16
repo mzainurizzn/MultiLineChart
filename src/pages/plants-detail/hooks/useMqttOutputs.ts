@@ -29,16 +29,16 @@ export function useMqttOutputs() {
       client.subscribe("AMG/Speed/Last_Napkin");
       client.subscribe("AMG/Speed/Current_Pants");
       client.subscribe("AMG/Speed/Last_Pants");
-      client.subscribe("AMG/Speed/Line1");
-      client.subscribe("AMG/Speed/Line3");
-      client.subscribe("AMG/Speed/Line4");
-      client.subscribe("AMG/Speed/Line5");
-      client.subscribe("AMG/Speed/Line6");
-      client.subscribe("AMG/Speed/Line7");
-      client.subscribe("AMG/Speed/Line8");
-      client.subscribe("AMG/Speed/Line9");
-      client.subscribe("AMG/Speed/Line10");
-      client.subscribe("AMG/Speed/Line11");
+      client.subscribe("AMG/Speed/L1");
+      client.subscribe("AMG/Speed/L3");
+      client.subscribe("AMG/Speed/L4");
+      client.subscribe("AMG/Speed/L5");
+      client.subscribe("AMG/Speed/L6");
+      client.subscribe("AMG/Speed/L7");
+      client.subscribe("AMG/Speed/L8");
+      client.subscribe("AMG/Speed/L9");
+      client.subscribe("AMG/Speed/L10");
+      client.subscribe("AMG/Speed/L11");
 
     });
 
@@ -55,25 +55,25 @@ export function useMqttOutputs() {
             return { ...prev, pantsCurrent: value };
           case "AMG/Speed/Last_Pants":
             return { ...prev, pantsLast: value };
-          case "AMG/Speed/Line1":
+          case "AMG/Speed/L1":
             return { ...prev, Line1: value };
-          case "AMG/Speed/Line3":
+          case "AMG/Speed/L3":
             return { ...prev, Line3: value };
-          case "AMG/Speed/Line4":
+          case "AMG/Speed/L4":
             return { ...prev, Line4: value };
-          case "AMG/Speed/Line5":
+          case "AMG/Speed/L5":
             return { ...prev, Line5: value };
-          case "AMG/Speed/Line6":
+          case "AMG/Speed/L6":
             return { ...prev, Line6: value };
-          case "AMG/Speed/Line7":
+          case "AMG/Speed/L7":
             return { ...prev, Line7: value };
-          case "AMG/Speed/Line8":
+          case "AMG/Speed/L8":
             return { ...prev, Line8: value };
-          case "AMG/Speed/Line9":
+          case "AMG/Speed/L9":
             return { ...prev, Line9: value };
-          case "AMG/Speed/Line10":
+          case "AMG/Speed/L10":
             return { ...prev, Line10: value };
-          case "AMG/Speed/Line11":
+          case "AMG/Speed/L11":
             return { ...prev, Line11: value };
           default:
             return prev;

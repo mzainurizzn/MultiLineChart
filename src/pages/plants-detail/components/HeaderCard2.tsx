@@ -1,10 +1,11 @@
-import { useMqttOutputs } from "../hooks/useMqttOutputs";
+import { useMqttOutputs } from "../../plants/hooks/useMqttOutputs";
 
 type HeaderCardProps = {
   cardBg: string
   border: string
   primary: string
   isLandscape: boolean
+  napkinCurrent:number
   Line1: number
   Line3: number
   Line4: number
@@ -16,7 +17,6 @@ type HeaderCardProps = {
   Line10: number
   Line11: number
   
-
 }
 
 export function HeaderCard2({
@@ -24,6 +24,7 @@ export function HeaderCard2({
   border,
   primary,
   isLandscape,
+  napkinCurrent,
   Line1,
   Line3,
   Line4,
@@ -64,35 +65,27 @@ export function HeaderCard2({
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 1</div>
-          <div className="text-white font-extrabold text-lg"> {Line1} </div>
+          <div className={`font-extrabold text-xl ${Line1 < 50 ? "text-red-500" : "text-green-500"}`} >{Line1} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 3</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line3}
-          </div>
+          <div className={`font-extrabold text-xl ${Line3 < 50 ? "text-red-500" : "text-green-500"}`} >{Line3} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 4</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line4}
-          </div>
+          <div className={`font-extrabold text-xl ${Line4 < 50 ? "text-red-500" : "text-green-500"}`} >{Line4} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 5</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line5}
-          </div>
+          <div className={`font-extrabold text-xl ${Line5 < 50 ? "text-red-500" : "text-green-500"}`} >{Line5} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 6</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line6}
-          </div>
+          <div className={`font-extrabold text-xl ${Line6 < 50 ? "text-red-500" : "text-green-500"}`} >{Line6} </div>
         </div>
 
       </div>
@@ -102,37 +95,27 @@ export function HeaderCard2({
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 7</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line7}
-          </div>
+          <div className={`font-extrabold text-xl ${Line7 < 50 ? "text-red-500" : "text-green-500"}`} >{Line7} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 8</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line8}
-          </div>
+          <div className={`font-extrabold text-xl ${Line8 < 50 ? "text-red-500" : "text-green-500"}`} >{Line8} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 9</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line9}
-          </div>
+          <div className={`font-extrabold text-xl ${Line9 < 50 ? "text-red-500" : "text-green-500"}`} >{Line9} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 10</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line10}
-          </div>
+          <div className={`font-extrabold text-xl ${Line10 < 50 ? "text-red-500" : "text-green-500"}`} >{Line10} </div>
         </div>
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 11</div>
-          <div className="text-white font-extrabold text-lg">
-            {Line11}
-          </div>
+          <div className={`font-extrabold text-xl ${Line11 < 50 ? "text-red-500" : "text-green-500"}`} >{Line11} </div>
         </div>
 
       </div>

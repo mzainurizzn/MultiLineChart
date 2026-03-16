@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import mqtt from "mqtt";
+import mqtt, { MqttClient } from "mqtt";
 
 export function useMqttOutputs() {
   const [data, setData] = useState({
@@ -17,31 +17,33 @@ export function useMqttOutputs() {
     Line9: 0,
     Line10: 0,
     Line11: 0,
-
-
   });
 
   useEffect(() => {
-    const client = mqtt.connect("ws://172.17.173.164:443");
+    const client: MqttClient = mqtt.connect("ws://172.17.173.164:443");
 
     client.on("connect", () => {
-      client.subscribe("AMG/Speed/Current_Napkin");
-      client.subscribe("AMG/Speed/Last_Napkin");
-      client.subscribe("AMG/Speed/Current_Pants");
-      client.subscribe("AMG/Speed/Last_Pants");
-      client.subscribe("AMG/Speed/Line1");
-      client.subscribe("AMG/Speed/Line3");
-      client.subscribe("AMG/Speed/Line4");
-      client.subscribe("AMG/Speed/Line5");
-      client.subscribe("AMG/Speed/Line6");
-      client.subscribe("AMG/Speed/Line7");
-      client.subscribe("AMG/Speed/Line8");
-      client.subscribe("AMG/Speed/Line9");
-      client.subscribe("AMG/Speed/Line10");
-      client.subscribe("AMG/Speed/Line11");
-
+      console.log("MQTT connected");
+      const topics = [
+        "AMG/Speed/Current_Napkin",
+        "AMG/Speed/Last_Napkin",
+        "AMG/Speed/Current_Pants",
+        "AMG/Speed/Last_Pants",
+        "AMG/Speed/Line1",
+        "AMG/Speed/Line3",
+        "AMG/Speed/Line4",
+        "AMG/Speed/Line5",
+        "AMG/Speed/Line6",
+        "AMG/Speed/Line7",
+        "AMG/Speed/Line8",
+        "AMG/Speed/Line9",
+        "AMG/Speed/Line10",
+        "AMG/Speed/Line11",
+      ];
+      topics.forEach((t) => client.subscribe(t));
     });
 
+<<<<<<< HEAD
      client.on("message", (topic, message) => {
       let value = 0;
       try {
@@ -51,45 +53,44 @@ export function useMqttOutputs() {
         console.error("Failed to parse MQTT message:", message.toString(), err);
         value = 0;
       }
+=======
+    client.on("message", (topic, message) => {
+  try {
+    const parsed = JSON.parse(message.toString());
+    const value = parsed?.value !== undefined ? Number(parsed.value) : 0;
 
-      setData((prev) => {
-        switch (topic) {
-          case "AMG/Speed/Current_Napkin":
-            return { ...prev, napkinCurrent: value };
-          case "AMG/Speed/Last_Napkin":
-            return { ...prev, napkinLast: value };
-          case "AMG/Speed/Current_Pants":
-            return { ...prev, pantsCurrent: value };
-          case "AMG/Speed/Last_Pants":
-            return { ...prev, pantsLast: value };
-          case "AMG/Speed/Line1":
-            return { ...prev, Line1: value };
-          case "AMG/Speed/Line3":
-            return { ...prev, Line3: value };
-          case "AMG/Speed/Line4":
-            return { ...prev, Line4: value };
-          case "AMG/Speed/Line5":
-            return { ...prev, Line5: value };
-          case "AMG/Speed/Line6":
-            return { ...prev, Line6: value };
-          case "AMG/Speed/Line7":
-            return { ...prev, Line7: value };
-          case "AMG/Speed/Line8":
-            return { ...prev, Line8: value };
-          case "AMG/Speed/Line9":
-            return { ...prev, Line9: value };
-          case "AMG/Speed/Line10":
-            return { ...prev, Line10: value };
-          case "AMG/Speed/Line11":
-            return { ...prev, Line11: value };
-          default:
-            return prev;
-        }
-      });
+    setData((prev) => {
+      const newData = {
+        ...prev,
+        ...(topic === "AMG/Speed/Line1" && { Line1: 800 }),
+        ...(topic === "AMG/Speed/Line3" && { Line3: value }),
+        ...(topic === "AMG/Speed/Line4" && { Line4: value }),
+        ...(topic === "AMG/Speed/Line5" && { Line5: value }),
+        ...(topic === "AMG/Speed/Line6" && { Line6: value }),
+        ...(topic === "AMG/Speed/Line7" && { Line7: value }),
+        ...(topic === "AMG/Speed/Line8" && { Line8: value }),
+        ...(topic === "AMG/Speed/Line9" && { Line9: value }),
+        ...(topic === "AMG/Speed/Line10" && { Line10: value }),
+        ...(topic === "AMG/Speed/Line11" && { Line11: value }),
+        ...(topic === "AMG/Speed/Current_Napkin" && { napkinCurrent: value }),
+        ...(topic === "AMG/Speed/Last_Napkin" && { napkinLast: value }),
+        ...(topic === "AMG/Speed/Current_Pants" && { pantsCurrent: value }),
+        ...(topic === "AMG/Speed/Last_Pants" && { pantsLast: value }),
+      };
+>>>>>>> 068dcd745265cce96eaa5de3ccf394c91b829b80
+
+      console.log(`MQTT update [${topic}]:`, value);
+      return newData;
     });
+  } catch (err) {
+    console.error("Failed to parse MQTT message:", message.toString(), err);
+    
+  }
+});
 
+    // Cleanup
     return () => {
-      client.end();
+      client.end(); // tutup koneksi MQTT saat unmount
     };
   }, []);
 
