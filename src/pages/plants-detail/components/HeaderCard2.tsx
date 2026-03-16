@@ -5,7 +5,6 @@ type HeaderCardProps = {
   border: string
   primary: string
   isLandscape: boolean
-  napkinCurrent:number
   Line1: number
   Line3: number
   Line4: number
@@ -24,7 +23,6 @@ export function HeaderCard2({
   border,
   primary,
   isLandscape,
-  napkinCurrent,
   Line1,
   Line3,
   Line4,
@@ -50,14 +48,12 @@ export function HeaderCard2({
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <div className="text-white/65 mt-1">
-            Machine Status & Speed Summary
+            Machine Live Speed 
           </div>
         </div>
-
-
       </div>
 
-      {/* LINE */}
+      {/* LINE 1 */}
       <div className="mt-2 h-px bg-white/10" />
 
       {/* STATS 1 */}
@@ -67,6 +63,26 @@ export function HeaderCard2({
           <div className="text-white/60 text-xs">Mesin 1</div>
           <div className={`font-extrabold text-xl ${Line1 < 50 ? "text-red-500" : "text-green-500"}`} >{Line1} </div>
         </div>
+
+        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+          <div className="text-white/60 text-xs">Mesin 6</div>
+          <div className={`font-extrabold text-xl ${Line6 < 50 ? "text-red-500" : "text-green-500"}`} >{Line6} </div>
+        </div>
+
+        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+          <div className="text-white/60 text-xs">Mesin 11</div>
+          <div className={`font-extrabold text-xl ${Line11 < 50 ? "text-red-500" : "text-green-500"}`} >{Line11} </div>
+        </div>
+
+      </div>
+
+
+      {/* LINE 2*/}
+      <div className="mt-2 h-px bg-white/10" />
+
+      {/* STATS 2 */}
+
+      <div className="mt-3 flex flex-wrap gap-4">
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 3</div>
@@ -83,17 +99,17 @@ export function HeaderCard2({
           <div className={`font-extrabold text-xl ${Line5 < 50 ? "text-red-500" : "text-green-500"}`} >{Line5} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
-          <div className="text-white/60 text-xs">Mesin 6</div>
-          <div className={`font-extrabold text-xl ${Line6 < 50 ? "text-red-500" : "text-green-500"}`} >{Line6} </div>
-        </div>
-
       </div>
+      
 
-      {/* STATS 2 */}
+        {/* LINE 3 */}
+      <div className="mt-2 h-px bg-white/10" />
+
+      {/* STATS 3 */}
+
       <div className="mt-3 flex flex-wrap gap-4">
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+      <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 7</div>
           <div className={`font-extrabold text-xl ${Line7 < 50 ? "text-red-500" : "text-green-500"}`} >{Line7} </div>
         </div>
@@ -113,12 +129,9 @@ export function HeaderCard2({
           <div className={`font-extrabold text-xl ${Line10 < 50 ? "text-red-500" : "text-green-500"}`} >{Line10} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
-          <div className="text-white/60 text-xs">Mesin 11</div>
-          <div className={`font-extrabold text-xl ${Line11 < 50 ? "text-red-500" : "text-green-500"}`} >{Line11} </div>
         </div>
 
       </div>
-    </div>
+    
   )
 }
