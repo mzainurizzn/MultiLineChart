@@ -42,9 +42,15 @@ export function useMqttOutputs() {
 
     });
 
-    client.on("message", (topic, message) => {
-      const value = Number(message.toString());
-
+     client.on("message", (topic, message) => {
+      let value = 0;
+      try {
+        const parsed = JSON.parse(message.toString());
+        value = Number(parsed.value) || 0;
+      } catch (err) {
+        console.error("Failed to parse MQTT message:", message.toString(), err);
+        value = 0;
+      }
 
       setData((prev) => {
         switch (topic) {
