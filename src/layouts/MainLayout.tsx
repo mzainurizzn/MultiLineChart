@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import LogoWings from "../assets/logo.png"
+import LogoWings from '../assets/logo.png';
 
 type MenuChild = {
   key: string;
@@ -15,7 +15,10 @@ type MenuItem = {
   children?: MenuChild[];
 };
 
-const menus: MenuItem[] = [{ key: "plants", label: "Plants", to: "/" }];
+const menus: MenuItem[] = [
+  { key: "plants", label: "Machine Speed", to: "/" },
+  { key: "", label: "Weight Checker", to: "/weightchecker" }
+];
 
 export default function MainLayout() {
   const [open, setOpen] = React.useState(false);
@@ -82,7 +85,7 @@ export default function MainLayout() {
             </svg>
           </button>
 
-          <div className="text-sm font-extrabold text-white">OEE Wings</div>
+          <div className="text-base font-extrabold text-white">Dashboard Monitoring PT.AMG</div>
 
           <div className="flex items-center gap-2">
             <img 
@@ -153,7 +156,7 @@ export default function MainLayout() {
                       end
                       className={({ isActive }) =>
                         [
-                          "flex items-center gap-3 px-3 py-3 rounded-xl text-sm border transition",
+                          "flex items-center gap-3 px-3 py-3 rounded-xl text-sm border transition mt-3",
                           isActive ? "text-white" : "text-white/80",
                         ].join(" ")
                       }
@@ -228,7 +231,7 @@ export default function MainLayout() {
 
             <div className="p-3 mt-auto">
               <div className="text-xs" style={{ color: subtle }}>
-                © Wings - MDT {new Date().getFullYear()}
+                © Wings - AMG {new Date().getFullYear()}
               </div>
             </div>
           </aside>

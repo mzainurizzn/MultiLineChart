@@ -213,7 +213,7 @@ export const BarChart = ({
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               data={chartData}
-              margin={{ top: 22, right: 18, left: 6, bottom: 12 }}
+              margin={{ top: 22, right: 18, left: 0, bottom: 12 }}
             >
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">

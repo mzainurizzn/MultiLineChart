@@ -9,12 +9,21 @@ export function useElementSize<T extends HTMLElement>() {
 
     const ro = new ResizeObserver(([entry]) => {
       const cr = entry.contentRect;
-      setSize({ width: Math.floor(cr.width), height: Math.floor(cr.height) });
+      setSize({
+        width: Math.floor(cr.width),
+        height: Math.floor(cr.height),
+      });
     });
 
     ro.observe(el);
     return () => ro.disconnect();
   }, [el]);
 
-  return { ref: setEl, ...size };
+  const isLandscape = size.width > size.height;
+
+  return {
+    ref: setEl,
+    ...size,
+    isLandscape,
+  };
 }

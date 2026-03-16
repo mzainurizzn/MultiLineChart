@@ -18,6 +18,7 @@ type Props = {
   monthly1: React.ReactNode;
   monthly2?: React.ReactNode | null;
   yearly: React.ReactNode;
+  yearly1?: React.ReactNode | null;
 };
 
 export default function MetricPagerCard({
@@ -33,6 +34,7 @@ export default function MetricPagerCard({
   monthly1,
   monthly2,
   yearly,
+  yearly1,
 }: Props) {
   const { ref: cardRef, width: cardW } = useElementSize<HTMLDivElement>();
   const pagerW = Math.max(280, cardW || 0);
@@ -41,15 +43,8 @@ export default function MetricPagerCard({
 
   // total pages: landscape => [monthly, yearly] = 2
   // portrait => [monthly1, monthly2, yearly] = 3 (monthly2 optional, but in your logic you show 3 dots)
-  const pageCount = isLandscape ? 2 : 3;
-
-  // label logic (copy dari RN)
-  let label = "Bulanan";
-  if (isLandscape) {
-    label = page === 0 ? "Bulanan" : "Tahunan";
-  } else {
-    label = page === 0 || page === 1 ? "Bulanan" : "Tahunan";
-  }
+  const pages = [monthly1, monthly2, yearly, yearly1].filter(Boolean);
+  const pageCount = pages.length;
 
   // restore scroll position kalau width berubah / rotate
   React.useEffect(() => {
@@ -75,17 +70,10 @@ export default function MetricPagerCard({
       <div className="p-4 pb-3">
         <div className="flex items-center justify-between gap-3">
           <div className="text-white font-extrabold text-base">{title}</div>
-
-          <div
-            className="rounded-xl border px-3 py-2"
-            style={{ borderColor: border, background: "#ffffff0f" }}
-          >
-            <div className="text-white/85 text-xs font-extrabold">{label}</div>
-          </div>
         </div>
 
         <div className="mt-2 text-white/60 text-xs">
-          Swipe kiri/kanan untuk pindah view
+          Swipe kiri/kanan untuk pindah view Mesin lain
         </div>
       </div>
 
@@ -110,33 +98,43 @@ export default function MetricPagerCard({
             }}
           >
             <div className="h-full flex" style={{ width: pagerW * pageCount }}>
-              {/* page 0 */}
-              <div
-                className="h-full"
-                style={{ width: pagerW, scrollSnapAlign: "start" as any }}
-              >
-                <div className="p-3">{monthly1}</div>
-              </div>
-
-              {/* page 1 (monthly2) */}
-              <div
-                className="h-full"
-                style={{ width: pagerW, scrollSnapAlign: "start" as any }}
-              >
-                <div className="p-3">
-                  {monthly2 ? monthly2 : <div className="text-white/70">—</div>}
+              {pages.map((content, i) => (
+                <div
+                  key={i}
+                  className="h-full"
+                  style={{ width: pagerW, scrollSnapAlign: "start" }}
+                >
+                  <div className="p-3">{content}</div>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              {/* page 2 (yearly) */}
-              <div
-                className="h-full"
-                style={{ width: pagerW, scrollSnapAlign: "start" as any }}
-              >
-                <div className="p-3">{yearly}</div>
+            {/* page 0 */}
+            <div className="h-full" style={{ width: pagerW, scrollSnapAlign: "start" as any }}>
+              <div className="p-3">{monthly1}</div>
+            </div>
+
+            {/* page 1 */}
+            <div className="h-full" style={{ width: pagerW, scrollSnapAlign: "start" as any }}>
+              <div className="p-3">
+                {monthly2 ? monthly2 : <div className="text-white/70">—</div>}
               </div>
             </div>
+
+            {/* page 2 */}
+            <div className="h-full" style={{ width: pagerW, scrollSnapAlign: "start" as any }}>
+              <div className="p-3">{yearly}</div>
+            </div>
+
+            {/* page 3 */}
+            <div className="h-full" style={{ width: pagerW, scrollSnapAlign: "start" as any }}>
+              <div className="p-3">
+                {yearly1 ? yearly1 : <div className="text-white/70">—</div>}
+              </div>
+            </div>
+
           </div>
+          
         )}
 
         <div className="h-px bg-white/10" />
