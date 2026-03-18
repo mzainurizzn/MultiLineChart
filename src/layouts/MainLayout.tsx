@@ -16,7 +16,7 @@ type MenuItem = {
 };
 
 const menus: MenuItem[] = [
-  { key: "plants", label: "Machine Speed", to: "/" },
+  { key: "plants", label: "Machine Speed", to: "/plants/amg-diapers" },
   { key: "", label: "Weight Checker", to: "/weightchecker" }
 ];
 
@@ -153,7 +153,6 @@ export default function MainLayout() {
                       key={m.key}
                       to={m.to}
                       onClick={() => setOpen(false)}
-                      end
                       className={({ isActive }) =>
                         [
                           "flex items-center gap-3 px-3 py-3 rounded-xl text-sm border transition mt-3",

@@ -57,7 +57,7 @@ export function HeaderCard2({
       <div className="mt-2 h-px bg-white/10" />
 
       {/* STATS 1 */}
-      <div className="mt-3 flex flex-wrap gap-4">
+      <div className="mt-3 grid grid-cols-4 md:grid-cols-4 gap-4">
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 1</div>
@@ -82,7 +82,7 @@ export function HeaderCard2({
 
       {/* STATS 2 */}
 
-      <div className="mt-3 flex flex-wrap gap-4">
+      <div className="mt-3 grid grid-cols-4 md:grid-cols-4 gap-4">
 
         <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
           <div className="text-white/60 text-xs">Mesin 3</div>
