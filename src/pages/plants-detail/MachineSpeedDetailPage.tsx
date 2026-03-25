@@ -51,7 +51,7 @@ export default function MachineSpeedDetailPage() {
 
   ;
 
-  const { napkinCurrent, napkinLast, pantsCurrent, pantsLast,Line1 ,Line3 ,Line4 ,Line5, Line6, Line7, Line8, Line9, Line10, Line11 } = useMqttOutputs();
+  const { napkinCurrent, napkinLast, pantsCurrent, pantsLast,Line1 ,Line3 ,Line4 ,Line5, Line6, Line7, Line8, Line9, Line10, Line11, Total1, Total3, Total4, Total5, Total6, Total7, Total8, Total9, Total10, Total11} = useMqttOutputs();
   
 
   // =========================
@@ -203,9 +203,16 @@ export default function MachineSpeedDetailPage() {
           Line9={Line9}
           Line10={Line10}
           Line11={Line11}
-
-          
-        
+          Total1={Total1}
+          Total3={Total3}
+          Total4={Total4}
+          Total5={Total5}
+          Total6={Total6}
+          Total7={Total7}
+          Total8={Total8}
+          Total9={Total9}
+          Total10={Total10}
+          Total11={Total11}
         />
       </div>
 

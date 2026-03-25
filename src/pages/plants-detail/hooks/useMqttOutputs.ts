@@ -17,6 +17,16 @@ export function useMqttOutputs() {
     Line9: 0,
     Line10: 0,
     Line11: 0,
+    Total1: 0,
+    Total3: 0,
+    Total4: 0,
+    Total5: 0,
+    Total6: 0,
+    Total7: 0,
+    Total8: 0,
+    Total9: 0,
+    Total10: 0,
+    Total11: 0,
 
 
   });
@@ -39,6 +49,16 @@ export function useMqttOutputs() {
       client.subscribe("AMG/Speed/L9");
       client.subscribe("AMG/Speed/L10");
       client.subscribe("AMG/Speed/L11");
+      client.subscribe("AMG/Speed/Line1_Cur_Tot");
+      client.subscribe("AMG/Speed/Line3_Cur_Tot");
+      client.subscribe("AMG/Speed/Line4_Cur_Tot");
+      client.subscribe("AMG/Speed/Line5_Cur_Tot");
+      client.subscribe("AMG/Speed/Line6_Cur_Tot");
+      client.subscribe("AMG/Speed/Line7_Cur_Tot");
+      client.subscribe("AMG/Speed/Line8_Cur_Tot");
+      client.subscribe("AMG/Speed/Line9_Cur_Tot");
+      client.subscribe("AMG/Speed/Line10_Cur_Tot");
+      client.subscribe("AMG/Speed/Line11_Cur_Tot");
 
     });
 
@@ -75,6 +95,26 @@ export function useMqttOutputs() {
             return { ...prev, Line10: value };
           case "AMG/Speed/L11":
             return { ...prev, Line11: value };
+          case "AMG/Speed/Line1_Cur_Tot":
+            return { ...prev, Total1: value };
+          case "AMG/Speed/Line3_Cur_Tot":
+            return { ...prev, Total3: value };
+          case "AMG/Speed/Line4_Cur_Tot":
+            return { ...prev, Total4: value };
+          case "AMG/Speed/Line5_Cur_Tot":
+            return { ...prev, Total5: value };
+          case "AMG/Speed/Line6_Cur_Tot":
+            return { ...prev, Total6: value };
+          case "AMG/Speed/Line7_Cur_Tot":
+            return { ...prev, Total7: value };
+          case "AMG/Speed/Line8_Cur_Tot":
+            return { ...prev, Total8: value };
+          case "AMG/Speed/Line9_Cur_Tot":
+            return { ...prev, Total9: value };
+          case "AMG/Speed/Line10_Cur_Tot":
+            return { ...prev, Total10: value };
+          case "AMG/Speed/Line11_Cur_Tot":
+            return { ...prev, Total11: value };
           default:
             return prev;
         }
