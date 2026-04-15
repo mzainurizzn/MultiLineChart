@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import mqtt, { MqttClient } from "mqtt";
 import {
-    LineChart,
-    Line,
+    AreaChart,
+    Area,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -54,6 +54,7 @@ interface RealtimeMqttLineChartProps {
     historyBaseUrl?: string; // contoh: http://172.20.10.5:1880
     onValueUpdate?: (value: number | string) => void;
 }
+
 
 
 function formatTimeLabel(date: Date) {
@@ -390,10 +391,17 @@ useEffect(() => {
 
             <div style={{ width: "100%", height: chartHeight }}>
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
+                    <AreaChart 
                         data={data}
                         margin={{ top: 8, right: 10, left: -28, bottom: 10 }}
                     >
+
+                    <defs>
+                        <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#00ff00" stopOpacity={0.25}/>
+                            <stop offset="100%" stopColor="#00ff00" stopOpacity={0}/>
+                        </linearGradient>
+                    </defs>
                     
                     <XAxis
                         dataKey="ts"
@@ -428,16 +436,16 @@ useEffect(() => {
                             }}
                             formatter={(value) => [`${Number(value)} p/min`, lineName]}
 />
-                        <Line
-                            type="monotone"
+                        <Area
+                            type="linear"
                             dataKey="value"
-                            name={lineName}
-                            dot={false}
-                            isAnimationActive={false}
                             stroke="#00ff00"
+                            fill="url(#m1)"
+                            fillOpacity={0.8}
                             strokeWidth={1}
+                            isAnimationActive={false}
                         />
-                    </LineChart>
+                    </AreaChart>
                 </ResponsiveContainer>
             </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

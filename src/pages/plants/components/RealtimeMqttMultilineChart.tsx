@@ -27,9 +27,13 @@ type ChartPoint = {
     timeLabel: string;
     value: number;
     ts: number;
+    m3?: number;
+    m4?: number;
+    m5?: number;
 };
 
 type ChartMode = "realtime" | "5m" | "1h" | "6h" | "12h" | "1d" | "3d";
+type MachineKey = "m3" | "m4" | "m5";
 
 interface HistoryApiResponse {
     data?: Array<{
@@ -184,7 +188,7 @@ export default function RealtimeMqttLineChart({
     maxPoints = 120,
     windowMinutes = 5,
     height = 320,
-    yDomain = [0, 500],
+    yDomain = [0, 1000],
     lineName = "Value",
     historyBaseUrl,
 }: RealtimeMqttLineChartProps) {
@@ -219,6 +223,7 @@ useEffect(() => {
     const chartHeight = isMobile ? 280 : height;
     const axisFontSize = isMobile ? 10 : 12; // contoh: 10px untuk mobile, 12px untuk desktop
 
+    const topics = ["AMG/Speed/Line3", "AMG/Speed/Line4", "AMG/Speed/Line5"];
 
     useEffect(() => {
         const id = clientId || `web_${Math.random().toString(16).slice(2, 10)}`;
@@ -235,12 +240,13 @@ useEffect(() => {
         clientRef.current = client;
 
         client.on("connect", () => {
-            setStatus("Online");
-            client.subscribe(topic, { qos: 0 }, (err) => {
-                if (err) {
-                    console.error("Subscribe error:", err);
-                }
+          setStatus("Online");
+
+          topics.forEach((t) => {
+            client.subscribe(t, (err) => {
+              if (err) console.error("Subscribe error:", err);
             });
+          });
         });
 
         client.on("reconnect", () => {
@@ -256,29 +262,40 @@ useEffect(() => {
             setStatus("error");
         });
 
-        client.on("message", (_topic, message) => {
-            if (mode !== "realtime") return;
+        client.on("message", (topic, message) => {
+          if (mode !== "realtime") return;
 
-            const raw = message.toString();
-            const parsed = parsePayload(raw);
+          const raw = message.toString();
+          const parsed = parsePayload(raw);
 
-            if (parsed.value === null) return;
+          if (parsed.value === null) return;
 
-            const point: ChartPoint = {
-                timeLabel: formatTimeLabel(new Date(parsed.ts)),
-                value: parsed.value,
-                ts: parsed.ts,
-            };
+          const ts = parsed.ts;
 
-            setData((prev) => {
-                const cutoff = Date.now() - windowMinutes * 60 * 1000;
-                const merged = [...prev, point].filter((item) => item.ts >= cutoff);
+          let key: "m3" | "m4" | "m5" | null = null;
 
-                if (merged.length > maxPoints) {
-                    return merged.slice(merged.length - maxPoints);
-                }
+          if (topic.includes("Line3")) key = "m3";
+          if (topic.includes("Line4")) key = "m4";
+          if (topic.includes("Line5")) key = "m5";
 
-                return merged;
+          if (!key) return;
+
+          setData((prev) => {
+              const cutoff = Date.now() - windowMinutes * 60 * 1000;
+
+              const updated = [...prev];
+              const idx = updated.findIndex((d) => d.ts === ts);
+
+              const point = updated[idx] || { ts };
+
+              point[key as "m3" | "m4" | "m5"] = parsed.value as number;
+
+              if (idx >= 0) updated[idx] = point;
+              else updated.push(point);
+
+              return updated
+                .filter((d) => d.ts >= cutoff)
+                .sort((a, b) => a.ts - b.ts);
             });
         });
 
@@ -394,7 +411,7 @@ useEffect(() => {
                     <AreaChart 
                         data={data}
                         margin={{ top: 8, right: 10, left: -28, bottom: 10 }}
-                        >
+                    >
 
                     <defs>
                         <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1">
@@ -418,33 +435,22 @@ useEffect(() => {
                     />
                         <YAxis 
                             domain={yDomain} 
-                            ticks={[0, 100, 200, 300, 400, 500]}
+                            ticks={[0, 200, 400, 600, 800, 1000]}
                             tick={{ fill: "#ffffff",fontSize: axisFontSize }}
                         />
                         <Tooltip
-                            contentStyle={{
-                                background:"none", //"rgba(20,20,20,0.95)",
-                                border: "none",//"0.5px solid rgba(255,255,255,0.08)",//
-                                borderRadius: 8,
-                                color: "#fff",
-                            }}
-                            labelFormatter={(label) => {
-                                const ts = Number(label);
-                                const d = new Date(ts);
+                          formatter={(value, name) => {
+                            const label =
+                              name === "m3" ? "Machine 3" :
+                              name === "m4" ? "Machine 4" :
+                              name === "m5" ? "Machine 5" : name;
 
-                                return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
-                            }}
-                            formatter={(value) => [`${Number(value)} p/min`, lineName]}
-/>
-                        <Area
-                            type="linear"
-                            dataKey="value"
-                            stroke="#00ff00"
-                            fill="url(#m1)"
-                            fillOpacity={0.8}
-                            strokeWidth={1}
-                            isAnimationActive={false}
+                            return [`${value} p/min`, label];
+                          }}
                         />
+                        <Area type="linear" dataKey="m3" stroke="#00ff00" fill="transparent" strokeWidth={2} />
+                        <Area type="linear" dataKey="m4" stroke="#00bfff" fill="transparent" strokeWidth={2} />
+                        <Area type="linear" dataKey="m5" stroke="#ff9800" fill="transparent" strokeWidth={2} />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>

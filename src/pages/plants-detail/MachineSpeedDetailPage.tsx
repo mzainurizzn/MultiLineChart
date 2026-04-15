@@ -7,18 +7,20 @@ import { useParams } from "react-router-dom";
 //import { useYtdLatest } from "../../hooks/useYtdLatest";
 import { useElementSize } from "./hooks/useElementSize";
 import MetricPagerCard from "./components/MetricPagerCard";
-import YearPickerModal from "./components/YearPickerModal";
+import MetricPagerCard2 from "./components/MetricPagerCard2";
+//import YearPickerModal from "./components/YearPickerModal";
 
 import mqtt from "mqtt";
 
 // chart kamu (web)
-import { BarChart } from "./components/BarChart";
-import { YearTotalBarChart } from "./components/YearTotalBarChart";
+//import { BarChart } from "./components/BarChart";
+//import { YearTotalBarChart } from "./components/YearTotalBarChart";
 import { HeaderCard2 } from "./components/HeaderCard2";
 
 // coba line chart 
 import RealtimeMqttLineChart from "../plants/components/RealtimeMqttLineChart";
 import RealtimeMqttLineChart1 from "../plants/components/RealtimeMqttLineChart1";
+import RealtimeMqttMultilineChart1 from "../plants/components/RealtimeMqttMultilineChart1";
 
 import { useMqttOutputs } from "./hooks/useMqttOutputs";
 
@@ -62,8 +64,8 @@ export default function MachineSpeedDetailPage() {
     //[data]
   //);
 
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [yearOpen, setYearOpen] = useState(false);
+  //const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  //const [yearOpen, setYearOpen] = useState(false);
 
   //useEffect(() => {
     //if (years.length > 0 && selectedYear === null) setSelectedYear(years[0]);
@@ -224,15 +226,13 @@ export default function MachineSpeedDetailPage() {
           </div>
         ) : (
           <div className="space-y-5">
-            <MetricPagerCard
-              title="Sanitary Napkin Machine 1,6 dan 11"
+            <MetricPagerCard2
+              title="Sanitary Napkin Machine"
               isLandscape={false}
               primary={primary}
               pageBg={pageBg}
               cardBg={cardBg}
               border={border}
-              page={oeePage}
-              setPage={setOeePage}
               height={PAGER_H}
               monthly1={
                  (
@@ -252,49 +252,25 @@ export default function MachineSpeedDetailPage() {
                   //   yDomain={[0, 100]}
                   //   ketKpi={ket_mounth_oee}
                   // />
-                  <RealtimeMqttLineChart
-                    title="Trend Speed Machine 1"
+                  <RealtimeMqttMultilineChart1
                     brokerUrl="ws://172.17.173.164:443"
                     historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line1"
-                    // username="user"
-                    // password="pass"
+                    topics={[
+                        "AMG/Speed/Line1",
+                        "AMG/Speed/Line6",
+                        "AMG/Speed/Line11",
+                    ]}
                     maxPoints={120}
                     windowMinutes={10}
                     height={320}
-                    lineName="Speed"
-                  />
+                />
                 )  
               }
               monthly2={
-                 (
-                  <RealtimeMqttLineChart
-                    title="Trend Speed Machine 6"
-                    brokerUrl="ws://172.17.173.164:443"
-                    historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line6"
-                    // username="user"
-                    // password="pass"
-                    maxPoints={120}
-                    windowMinutes={10}
-                    height={320}
-                    lineName="Speed"
-                  />
-                )
+              <></>
               }
               yearly={
-                <RealtimeMqttLineChart
-                    title="Trend Speed Machine 11"
-                    brokerUrl="ws://172.17.173.164:443"
-                    historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line11"
-                    // username="user"
-                    // password="pass"
-                    maxPoints={120}
-                    windowMinutes={10}
-                    height={320}
-                    lineName="Speed"
-                  />
+                <></>
               }
             />
 
