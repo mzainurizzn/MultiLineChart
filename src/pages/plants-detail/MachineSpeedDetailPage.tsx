@@ -16,11 +16,9 @@ import mqtt from "mqtt";
 //import { BarChart } from "./components/BarChart";
 //import { YearTotalBarChart } from "./components/YearTotalBarChart";
 import { HeaderCard2 } from "./components/HeaderCard2";
-
-// coba line chart 
-import RealtimeMqttLineChart from "../plants/components/RealtimeMqttLineChart";
-import RealtimeMqttLineChart1 from "../plants/components/RealtimeMqttLineChart1";
 import RealtimeMqttMultilineChart1 from "../plants/components/RealtimeMqttMultilineChart1";
+import RealtimeMqttMultilineChart2 from "../plants/components/RealtimeMqttMultilineChart2";
+import RealtimeMqttMultilineChart3 from "../plants/components/RealtimeMqttMultilineChart3";
 
 import { useMqttOutputs } from "./hooks/useMqttOutputs";
 
@@ -274,18 +272,16 @@ export default function MachineSpeedDetailPage() {
               }
             />
 
-            <MetricPagerCard
-              title="Baby Pants Machine 3,4 dan 5"
+            <MetricPagerCard2
+              title="Baby Pants Machine"
               isLandscape={false}
               primary={primary}
               pageBg={pageBg}
               cardBg={cardBg}
               border={border}
-              page={oeePage}
-              setPage={setOeePage}
               height={PAGER_H}
               monthly1={
-                (
+                 (
                   // <BarChart
                   //   data={yearData1}
                   //   metric="oee"
@@ -302,61 +298,35 @@ export default function MachineSpeedDetailPage() {
                   //   yDomain={[0, 100]}
                   //   ketKpi={ket_mounth_oee}
                   // />
-                  <RealtimeMqttLineChart1
-                    title="Trend Speed Machine 3"
+                  <RealtimeMqttMultilineChart2
                     brokerUrl="ws://172.17.173.164:443"
                     historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line3"
-                    // username="user"
-                    // password="pass"
+                    topics={[
+                        "AMG/Speed/Line3",
+                        "AMG/Speed/Line4",
+                        "AMG/Speed/Line5",
+                    ]}
                     maxPoints={120}
                     windowMinutes={10}
                     height={320}
-                    lineName="Speed"
-                  />
-                ) 
+                />
+                )  
               }
               monthly2={
-                 (
-                  <RealtimeMqttLineChart1
-                    title="Trend Speed Machine 4"
-                    brokerUrl="ws://172.17.173.164:443"
-                    historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line4"
-                    // username="user"
-                    // password="pass"
-                    maxPoints={120}
-                    windowMinutes={10}
-                    height={320}
-                    lineName="Speed"
-                  />
-                ) 
+              <></>
               }
               yearly={
-                <RealtimeMqttLineChart1
-                    title="Trend Speed Machine 5"
-                    brokerUrl="ws://172.17.173.164:443"
-                    historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line5"
-                    // username="user"
-                    // password="pass"
-                    maxPoints={120}
-                    windowMinutes={10}
-                    height={320}
-                    lineName="Speed"
-                  />
+                <></>
               }
             />
 
-            <MetricPagerCard
-              title="Baby Pants Machine 7,8,9 dan 10"
+            <MetricPagerCard2
+              title="Baby Pants Machine"
               isLandscape={false}
               primary={primary}
               pageBg={pageBg}
               cardBg={cardBg}
               border={border}
-              page={oeePage}
-              setPage={setOeePage}
               height={PAGER_H}
               monthly1={
                  (
@@ -376,65 +346,27 @@ export default function MachineSpeedDetailPage() {
                   //   yDomain={[0, 100]}
                   //   ketKpi={ket_mounth_oee}
                   // />
-                  <RealtimeMqttLineChart1
-                    title="Trend Speed Machine 7"
+                  <RealtimeMqttMultilineChart3
                     brokerUrl="ws://172.17.173.164:443"
                     historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line7"
-                    // username="user"
-                    // password="pass"
+                    topics={[
+                        "AMG/Speed/Line7",
+                        "AMG/Speed/Line8",
+                        "AMG/Speed/Line9",
+                        "AMG/Speed/Line10",
+                    ]}
                     maxPoints={120}
                     windowMinutes={10}
                     height={320}
-                    lineName="Speed"
-                  />
-                ) 
+                />
+                )  
               }
               monthly2={
-                 (
-                  <RealtimeMqttLineChart1
-                    title="Trend Speed Machine 8"
-                    brokerUrl="ws://172.17.173.164:443"
-                    historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line8"
-                    // username="user"
-                    // password="pass"
-                    maxPoints={120}
-                    windowMinutes={10}
-                    height={320}
-                    lineName="Speed"
-                  />
-                ) 
+              <></>
               }
               yearly={
-                <RealtimeMqttLineChart1
-                    title="Trend Speed Machine 9"
-                    brokerUrl="ws://172.17.173.164:443"
-                    historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line9"
-                    // username="user"
-                    // password="pass"
-                    maxPoints={120}
-                    windowMinutes={10}
-                    height={320}
-                    lineName="Speed"
-                  />
-                  
+                <></>
               }
-              yearly1={
-                <RealtimeMqttLineChart1
-                    title="Trend Speed Machine 10"
-                    brokerUrl="ws://172.17.173.164:443"
-                    historyBaseUrl="http://172.17.173.164:1880"
-                    topic="AMG/Speed/Line10"
-                    // username="user"
-                    // password="pass"
-                    maxPoints={120}
-                    windowMinutes={10}
-                    height={320}
-                    lineName="Speed"
-                  />
-              }   
             />
           </div>
        )}
