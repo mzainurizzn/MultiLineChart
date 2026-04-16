@@ -611,7 +611,7 @@ useEffect(() => {
                             visibleTopics[t as TopicKey] && (
                                 <Area
                                     key={t}
-                                    type="monotone"
+                                    type="linear"
                                     dataKey={t}
                                     name={topicLabels[t as TopicKey]}
                                     stroke={colors[t as TopicKey]}
@@ -696,7 +696,8 @@ useEffect(() => {
                 </button>
 
                 {/* SPACER */}
-                <div style={{ width: 140 }} />
+                <div style={{ width: 10 }} />
+                <div style={{ padding: "6px",fontSize: 12, fontWeight: 400,alignItems: "center"}}> Visible Line :</div>
 
                 {/* TOGGLE BUTTON */}
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

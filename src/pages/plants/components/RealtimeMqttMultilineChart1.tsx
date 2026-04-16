@@ -491,6 +491,7 @@ useEffect(() => {
                 padding: 16,
                 boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
                 color: "white"
+                
             }}
         >
             <div
@@ -585,6 +586,7 @@ useEffect(() => {
                             tick={{ fill: "#ffffff",fontSize: axisFontSize }}
                         />
                         <Tooltip
+                        
                             contentStyle={{
                                 background:"none", //"rgba(20,20,20,0.95)",
                                 border: "none",//"0.5px solid rgba(255,255,255,0.08)",//
@@ -611,7 +613,7 @@ useEffect(() => {
                             visibleTopics[t as TopicKey] && (
                                 <Area
                                     key={t}
-                                    type="monotone"
+                                    type="linear"
                                     dataKey={t}
                                     name={topicLabels[t as TopicKey]}
                                     stroke={colors[t as TopicKey]}
@@ -625,6 +627,7 @@ useEffect(() => {
                             )
                         ))}
                     </AreaChart>
+                   
                 </ResponsiveContainer>
             </div>
             {/* BUTTON MODE */}
@@ -696,7 +699,8 @@ useEffect(() => {
                 </button>
 
                 {/* SPACER */}
-                <div style={{ width: 140 }} />
+                <div style={{ width: 10 }} />
+                <div style={{ padding: "6px",fontSize: 12, fontWeight: 400,alignItems: "center"}}> Visible Line :</div>
 
                 {/* TOGGLE BUTTON */}
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
