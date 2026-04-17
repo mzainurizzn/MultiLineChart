@@ -10,6 +10,9 @@ import MetricPagerCard from "./components/MetricPagerCard";
 import MetricPagerCard2 from "./components/MetricPagerCard2";
 //import YearPickerModal from "./components/YearPickerModal";
 
+import LogoProtex from '../../assets/PX.png';
+import LogoBabyHappy from '../../assets/BHP.png';
+
 import mqtt from "mqtt";
 
 // chart kamu (web)
@@ -225,7 +228,15 @@ export default function MachineSpeedDetailPage() {
         ) : (
           <div className="space-y-5">
             <MetricPagerCard2
-              title="Sanitary Napkin Machine"
+              title={<div className="flex items-center gap-2">
+                  <img
+                    src={LogoProtex}
+                    alt="Wings"
+                    className="h-8 w-16 rounded-md object-contain"
+                  />
+                  <span>Sanitary Napkin Machine</span>
+                </div>
+              }
               isLandscape={false}
               primary={primary}
               pageBg={pageBg}
@@ -273,7 +284,15 @@ export default function MachineSpeedDetailPage() {
             />
 
             <MetricPagerCard2
-              title="Baby Pants Machine"
+              title={<div className="flex items-center gap-2">
+                  <img
+                    src={LogoBabyHappy}
+                    alt="Wings"
+                    className="h-10 w-14 rounded-md object-contain"
+                  />
+                  <span>Baby Pants Machine</span>
+                </div>
+              }
               isLandscape={false}
               primary={primary}
               pageBg={pageBg}
@@ -321,7 +340,15 @@ export default function MachineSpeedDetailPage() {
             />
 
             <MetricPagerCard2
-              title="Baby Pants Machine"
+              title={<div className="flex items-center gap-2">
+                  <img
+                    src={LogoBabyHappy}
+                    alt="Wings"
+                    className="h-10 w-14 rounded-md object-contain"
+                  />
+                  <span>Baby Pants Machine</span>
+                </div>
+              }
               isLandscape={false}
               primary={primary}
               pageBg={pageBg}

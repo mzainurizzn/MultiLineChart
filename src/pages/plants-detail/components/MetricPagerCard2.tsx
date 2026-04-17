@@ -2,7 +2,7 @@ import React from "react";
 import { useElementSize } from "../hooks/useElementSize";
 
 type Props = {
-  title: string;
+  title: React.ReactNode;
   isLandscape: boolean;
   primary: string;
   pageBg: string;
