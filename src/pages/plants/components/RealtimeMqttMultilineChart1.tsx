@@ -640,7 +640,7 @@ useEffect(() => {
                         color: mode === "realtime" ? "#fff" : "#fff",
                     }}
                 >
-                    Realtime
+                    Live
                 </button>
 
                 <button
@@ -712,9 +712,7 @@ useEffect(() => {
                                 key={t}
                                 onClick={() => toggleTopic(key)}
                                 style={{
-                                    padding: "6px 10px",
-                                    borderRadius: 6,
-                                    border: "1px solid #ccc",
+                                    ...buttonStyle,
                                     background: visibleTopics[key] ? colors[key] : "transparent",
                                     color: visibleTopics[key] ? "#000" : "#fff",
                                     cursor: "pointer",

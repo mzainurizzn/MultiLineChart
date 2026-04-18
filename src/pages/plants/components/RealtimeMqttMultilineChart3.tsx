@@ -640,7 +640,7 @@ useEffect(() => {
                         color: mode === "realtime" ? "#fff" : "#fff",
                     }}
                 >
-                    Realtime
+                    Live
                 </button>
 
                 <button
@@ -699,10 +699,9 @@ useEffect(() => {
                 </button>
                 
                 {/* SPACER */}
-                <div style={{ width: 10 }} />
-                <div style={{ padding: "6px",fontSize: 12, fontWeight: 400,alignItems: "center"}}> Visible Line :</div>
+                <div style={{ padding: "6px",fontSize: 11, fontWeight: 400}}> Visible Line :</div>
                 {/* TOGGLE BUTTON */}
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
                     {topics.map((t) => {
                         const key = t as TopicKey;
 
@@ -711,9 +710,7 @@ useEffect(() => {
                                 key={t}
                                 onClick={() => toggleTopic(key)}
                                 style={{
-                                    padding: "6px 10px",
-                                    borderRadius: 6,
-                                    border: "1px solid #ccc",
+                                    ...buttonStyle,
                                     background: visibleTopics[key] ? colors[key] : "transparent",
                                     color: visibleTopics[key] ? "#000" : "#fff",
                                     cursor: "pointer",
