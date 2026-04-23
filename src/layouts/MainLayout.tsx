@@ -230,7 +230,7 @@ export default function MainLayout() {
 
             <div className="p-3 mt-auto">
               <div className="text-xs" style={{ color: subtle }}>
-                © Wings - AMG {new Date().getFullYear()}
+                © Wings - AMG-ENG {new Date().getFullYear()}
               </div>
             </div>
           </aside>

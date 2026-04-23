@@ -77,21 +77,48 @@ export function HeaderCard2({
       <div className="mt-2 h-px bg-white/10" />
 
       {/* STATS 1 */}
-      <div className="mt-3 grid grid-cols-4 md:grid-cols-4 gap-4">
+      <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(50px,1fr))] gap-4">
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 1</div>
           <div className={`font-extrabold text-xl ${Line1 < 50 ? "text-red-500" : "text-green-500"}`} >{Line1} </div>
           <div className="text-white font text-xs">{Total1.toLocaleString("id-ID")} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 6</div>
           <div className={`font-extrabold text-xl ${Line6 < 50 ? "text-red-500" : "text-green-500"}`} >{Line6} </div>
           <div className="text-white font text-xs">{Total6.toLocaleString("id-ID")} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 11</div>
           <div className={`font-extrabold text-xl ${Line11 < 50 ? "text-red-500" : "text-green-500"}`} >{Line11} </div>
           <div className="text-white font text-xs">{Total11.toLocaleString("id-ID")} </div>
@@ -105,21 +132,48 @@ export function HeaderCard2({
 
       {/* STATS 2 */}
 
-      <div className="mt-3 grid grid-cols-4 md:grid-cols-4 gap-4">
+      <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(50px,1fr))] gap-4">
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 3</div>
           <div className={`font-extrabold text-xl ${Line3 < 50 ? "text-red-500" : "text-green-500"}`} >{Line3} </div>
           <div className="text-white font text-xs">{Total3.toLocaleString("id-ID")} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 4</div>
           <div className={`font-extrabold text-xl ${Line4 < 50 ? "text-red-500" : "text-green-500"}`} >{Line4} </div>
           <div className="text-white font text-xs">{Total4.toLocaleString("id-ID")} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 5</div>
           <div className={`font-extrabold text-xl ${Line5 < 50 ? "text-red-500" : "text-green-500"}`} >{Line5} </div>
           <div className="text-white font text-xs">{Total5.toLocaleString("id-ID")} </div>
@@ -133,27 +187,63 @@ export function HeaderCard2({
 
       {/* STATS 3 */}
 
-      <div className="mt-3 flex flex-wrap gap-4">
+      <div className="mt-3 grid grid-cols-4 md:grid-cols-4 gap-4">
 
-      <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+      <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 7</div>
           <div className={`font-extrabold text-xl ${Line7 < 50 ? "text-red-500" : "text-green-500"}`} >{Line7} </div>
           <div className="text-white font text-xs">{Total7.toLocaleString("id-ID")} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 8</div>
           <div className={`font-extrabold text-xl ${Line8 < 50 ? "text-red-500" : "text-green-500"}`} >{Line8} </div>
           <div className="text-white font text-xs">{Total8.toLocaleString("id-ID")} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 9</div>
           <div className={`font-extrabold text-xl ${Line9 < 50 ? "text-red-500" : "text-green-500"}`} >{Line9} </div>
           <div className="text-white font text-xs">{Total9.toLocaleString("id-ID")} </div>
         </div>
 
-        <div className="bg-[#0b1626] border border-white/10 rounded-xl px-2 py-2 w-full sm:w-[150px] flex-1">
+        <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
           <div className="text-white/60 text-xs">Mesin 10</div>
           <div className={`font-extrabold text-xl ${Line10 < 50 ? "text-red-500" : "text-green-500"}`} >{Line10} </div>
           <div className="text-white font text-xs">{Total10.toLocaleString("id-ID")} </div>

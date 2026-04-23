@@ -86,7 +86,19 @@ export default function MachineSpeedDetailPage() {
   // =========================
   // Layout sizing (mirip RN)
   // =========================
-  const PAGER_H = isLandscape ? 500 : 480;
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+  const PAGER_H = isMobile
+  ? (isLandscape ? 650 : 620)   // 📱 mobile
+  : (isLandscape ? 650 : 480);  // 💻 desktop
 
   // =========================
   // Pager state
@@ -162,24 +174,60 @@ export default function MachineSpeedDetailPage() {
 
           <div className="mt-4 h-px bg-white/10" />
 
-          <div className="mt-4 flex flex-wrap gap-4">
+          <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4">
 
-          <div className="bg-[#0b1626] border border-white/10 rounded-xl px-4 py-3 w-full sm:w-[150px] flex-1">
+          <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
             <div className="text-white/60 text-xs">Current Output Napkin</div>
             <div className="text-white font-extrabold text-lg">{napkinCurrent.toLocaleString("id-ID")}</div>
           </div>
 
-          <div className="bg-[#0b1626] border border-white/10 rounded-xl px-4 py-3 w-full sm:w-[150px] flex-1">
+          <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
             <div className="text-white/60 text-xs">Last Day Output Napkin</div>
             <div className="text-white font-extrabold text-lg">{napkinLast.toLocaleString("id-ID")}</div>
           </div>
 
-          <div className="bg-[#0b1626] border border-white/10 rounded-xl px-4 py-3 w-full sm:w-[150px] flex-1">
+          <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
             <div className="text-white/60 text-xs">Current Output Pants</div>
             <div className="text-white font-extrabold text-lg">{pantsCurrent.toLocaleString("id-ID")}</div>
           </div>
 
-          <div className="bg-[#0b1626] border border-white/10 rounded-xl px-4 py-3 w-full sm:w-[150px] flex-1">
+          <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
             <div className="text-white/60 text-xs">Last Day Output Pants</div>
             <div className="text-white font-extrabold text-lg">{pantsLast.toLocaleString("id-ID")}</div>
           </div>

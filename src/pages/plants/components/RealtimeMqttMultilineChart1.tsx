@@ -1,4 +1,4 @@
-//Chart untuk Line Speed Mesin 1, 6 & 11
+//Chart untuk Line Speed Mesin 3, 4 & 5
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import mqtt, { MqttClient } from "mqtt";
@@ -29,7 +29,14 @@ type MultiChartPoint = {
   [key: string]: number | string; // dynamic line keys
 };
 
-type ChartMode = "realtime" | "5m" | "1h" | "6h" | "12h" | "1d" | "3d";
+type DataMode =
+  | "realtime"
+  | "1h"
+  | "6h"
+  | "12h"
+  | "1d"
+  | "3d"
+  | "custom";
 
 interface HistoryApiResponse {
     data?: Array<{
@@ -144,7 +151,7 @@ function normalizeHistoryRows(
     .filter((item): item is MultiChartPoint => item !== null);
 }
 
-function getIntervalMinutes(mode: ChartMode) {
+function getIntervalMinutes(mode: DataMode) {
     switch (mode) {
         case "realtime":
             return 1;   // tiap 1 menit
@@ -167,7 +174,7 @@ function getBucketTs(ts: number, seconds = 5) {
   return Math.floor(ts / (seconds * 1000)) * (seconds * 1000);
 }
 
-function generateTimeTicks(data: MultiChartPoint[], mode: ChartMode) {
+function generateTimeTicks(data: MultiChartPoint[], mode: DataMode) {
     if (!data.length) return [];
 
     const interval = getIntervalMinutes(mode);
@@ -212,12 +219,19 @@ export default function RealtimeMqttLineChart({
 RealtimeMqttLineChartProps) {
     const [data, setData] = useState<MultiChartPoint[]>([]);
     const [status, setStatus] = useState("disconnected");
-    const [mode, setMode] = useState<ChartMode>("realtime");
+    const [dataMode, setDataMode] = useState<DataMode>("realtime");
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [nowTs, setNowTs] = useState(Date.now());
     const clientRef = useRef<MqttClient | null>(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
+    // Tambahan
+    const [tempStartDate, setTempStartDate] = useState("");
+    const [tempEndDate, setTempEndDate] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const isCustom = dataMode === "custom";
+    const isRealtime = dataMode === "realtime";
+    //
     const [visibleTopics, setVisibleTopics] = useState<Record<TopicKey, boolean>>({
         "AMG/Speed/Line1": true,
         "AMG/Speed/Line6": true,
@@ -273,18 +287,26 @@ useEffect(() => {
   return () => window.removeEventListener("resize", handleResize);
 }, []);
 
-useEffect(() => {
-    if (mode !== "realtime") return;
 
-    const interval = setInterval(() => {
-        setNowTs(Date.now());
-    }, 1000);
+
+    useEffect(() => {
+        if (dataMode !== "realtime") {
+            // 🔥 stop MQTT kalau bukan realtime
+            if (clientRef.current) {
+                clientRef.current.end(true);
+                clientRef.current = null;
+            }
+            return;
+        }
+
+    const interval = setInterval(() => {setNowTs(Date.now());}, 1000);
 
     return () => clearInterval(interval);
 
-}, [mode]);
-    const chartHeight = isMobile ? 280 : height;
-    const axisFontSize = isMobile ? 10 : 12; // contoh: 10px untuk mobile, 12px untuk desktop
+    }, [dataMode]);
+
+    const chartHeight = isMobile ? 300 : height;
+    const axisFontSize = isMobile ? 9 : 11; // contoh: 10px untuk mobile, 12px untuk desktop
 
 
     useEffect(() => {
@@ -322,7 +344,7 @@ useEffect(() => {
         });
 
         client.on("message", (incomingTopic, message) => {
-            if (mode !== "realtime") return;
+            if (dataMode !== "realtime") return;
 
             const raw = message.toString();
             const parsed = parsePayload(raw);
@@ -375,72 +397,104 @@ useEffect(() => {
             client.end(true);
             clientRef.current = null;
         };
-    }, [brokerUrl, topics, username, password, clientId, maxPoints, windowMinutes, mode]);
+    }, [brokerUrl, topics, username, password, clientId, maxPoints, windowMinutes, dataMode]);
+
+        
+  
+    //======= HISTORY=========/
+
+    const [pendingData, setPendingData] = useState<MultiChartPoint[] | null>(null);
 
     useEffect(() => {
-    if (!historyBaseUrl) return;
+            if (!pendingData) return;
 
-    const controller = new AbortController();
+            const timeout = setTimeout(() => {
+                setData(pendingData);
+                setPendingData(null);
+            }, 100); // kecil saja biar smooth
 
+            return () => clearTimeout(timeout);
+        }, [pendingData]);
+
+    useEffect(() => {
+            if (!historyBaseUrl) return;
     
-
-    const loadHistory = async () => {
-        try {
-            setLoadingHistory(true);
-
-            let rangeParam = mode === "realtime" ? "5m" : mode;
-
-            const allData: Record<string, MultiChartPoint[]> = {};
-
-            for (const t of topics) {
-            const url = `${historyBaseUrl}/api/history?topic=${encodeURIComponent(t)}&range=${rangeParam}`;
-            const res = await fetch(url);
-            const json = await res.json();
-
-            allData[t] = normalizeHistoryRows(json.data,t);
-            }
-
-            // merge by timestamp
-            const map = new Map<number, MultiChartPoint>();
-
-            topics.forEach((t) => {
-                allData[t].forEach((row) => {
-                    if (!map.has(row.ts)) {
-                    map.set(row.ts, {
-                        ts: row.ts,
-                        timeLabel: row.timeLabel,
-                    });
+            const controller = new AbortController();
+    
+            const load = async () => {
+                setLoadingHistory(true);
+    
+                try {
+                    const all: Record<string, MultiChartPoint[]> = {};
+    
+                    for (const t of topics) {
+    
+                        let url = "";
+    
+                        if (dataMode === "custom" && startDate && endDate) {
+                            url = `${historyBaseUrl}/api/history?topic=${t}&start=${new Date(startDate).getTime()}&end=${new Date(endDate).getTime()}`;
+                        } else {
+                            const range =
+                                dataMode === "realtime"
+                                    ? "5m"
+                                    : dataMode === "custom"
+                                    ? null
+                                    : dataMode;
+                            url = `${historyBaseUrl}/api/history?topic=${t}&range=${range}`;
+                        }
+    
+                        const res = await fetch(url, { signal: controller.signal });
+                        const json: HistoryApiResponse = await res.json();
+    
+                        all[t] = (json.data || []).map((d) => {
+                            const ts = new Date(d.ts || Date.now()).getTime();
+                            return {
+                                ts,
+                                timeLabel: formatTimeLabel(new Date(ts)),
+                                [t]: Number(d.value || 0),
+                            };
+                        });
                     }
-
-                const existing = map.get(row.ts)!;
-
-                    map.set(row.ts, {
-                    ...existing,
-                    [t]: row[t],   // atau row.value
+    
+                    const map = new Map<number, MultiChartPoint>();
+    
+                    topics.forEach((t) => {
+                        all[t].forEach((row) => {
+                            if (!map.has(row.ts)) {
+                                map.set(row.ts, {
+                                    ts: row.ts,
+                                    timeLabel: row.timeLabel,
+                                });
+                            }
+    
+                            map.set(row.ts, {
+                                ...map.get(row.ts)!,
+                                [t]: row[t],
+                            });
+                        });
                     });
-                });
-                });
-
-            const merged = Array.from(map.values()).sort((a, b) => a.ts - b.ts);
-
-            setData(merged);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoadingHistory(false);
-        }
-        };
-
-    loadHistory();
-
-    return () => controller.abort();
-}, [mode, topics, historyBaseUrl]);
+    
+                    setPendingData(
+                        Array.from(map.values()).sort((a, b) => a.ts - b.ts)
+                    );
+    
+                } finally {
+                    setLoadingHistory(false);
+                }
+            };
+    
+            load();
+    
+            return () => controller.abort();
+    
+        }, [dataMode, topics, historyBaseUrl, startDate, endDate]);
 
     const realtimeDomain = [
         nowTs - windowMinutes * 60 * 1000,
         nowTs
     ];
 
+    const isActive = (m: DataMode) => dataMode === m;
     const latestValue = useMemo(() => {
         if (!data.length) return "-";
 
@@ -462,6 +516,12 @@ useEffect(() => {
         "AMG/Speed/Line11": "#ffcc00",
     };
 
+    const gradients: Record<TopicKey, string> = {
+        "AMG/Speed/Line1": "from-green-800 via-emerald-600 to-green-500",
+        "AMG/Speed/Line6": "from-blue-800 via-blue-600 to-cyan-500",
+        "AMG/Speed/Line11": "from-yellow-800 via-amber-500 to-yellow-400",
+    };
+
     const topicLabels: Record<TopicKey, string> = {
         "AMG/Speed/Line1": "M1",
         "AMG/Speed/Line6": "M6",
@@ -475,11 +535,54 @@ useEffect(() => {
         border: "1px solid #ccc",
         cursor: "pointer",
         };
-
+    
     const iconStyle = {
         fontSize: "14px",
         lineHeight: 1,
         };
+
+    const resetCustomRange = () => {
+    setTempStartDate("");
+    setTempEndDate("");
+    setStartDate("");
+    setEndDate("");
+        };
+
+    const   modeButton = (mode: DataMode, label: string) => (
+        <button
+            onClick={() => setDataMode(mode)}
+            style={{
+            padding: "5px 12px",
+            fontSize: 12,
+            borderRadius: 8,
+            border: "none",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            background: isActive(mode)
+                ? "linear-gradient(135deg, #34d399, #10b981)"
+                : "transparent",
+            color: isActive(mode) ? "#022c22" : "#ccc",
+            fontWeight: 600,
+            }}
+        >
+            {label}
+        </button>
+        );
+
+
+        const getModeStyle = (active: boolean) => ({
+            padding: "6px 12px",
+            fontSize: 12,
+            borderRadius: 8,
+            border: "none",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            background: active
+                ? "linear-gradient(135deg, #34d399, #10b981)"
+                : "transparent",
+            color: active ? "#022c22" : "#ccc",
+            fontWeight: 600,
+            });
 
     return (
         <div
@@ -491,7 +594,6 @@ useEffect(() => {
                 padding: 16,
                 boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
                 color: "white"
-                
             }}
         >
             <div
@@ -499,27 +601,106 @@ useEffect(() => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginBottom: 12,
+                    marginBottom: 10,
                     gap: 2,
                     flexWrap: "wrap",
                 }}
             >
                 <div>
-                    <div style={{ fontSize: 18, fontWeight: 700 }}>{title}</div>
-                    <div style={{ display: "flex", gap: 16, fontSize: 14, flexWrap: "wrap" }}>
-                    <div>
-                        <b style={{ color: "#00ff00" }}>Status :</b> {status}
+                    <div
+                    style={{
+                        background: "linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))",
+                        borderRadius: 12,
+                        padding: "6px 14px",
+                        display: "inline-block",
+                        backdropFilter: "blur(6px)",
+                        border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                    >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700 }}>
+                        {title} &nbsp;&nbsp;&nbsp;
                     </div>
-                    <div>
-                        <b style={{ color: "#ffcc00" }}>Mode :</b> {mode}
+
+                    <div style={{ fontSize: 13, color: "#4ade80" }}>
+                        <b>Server :</b> {status}</div>
                     </div>
+                    </div>
+                    
+
+                    <div style={{ display: "flex", gap: 12, fontSize: 13, flexWrap: "wrap",paddingTop:8,paddingLeft:6 }}>
+                
+                    <div>
+                    <b style={{ color: "#facc15" }}>Mode :</b> {dataMode}
+                    </div>
+        
+                {/*INPUT DATE*/}
+
+               
+                
+                <div className="h-5.5 bg-gradient-to-r from-gray-700 via-gray-750 to-gray-800 border border-gray-700 rounded-xl px-0 py-0 w-[250px] sm:w-[250px]">
+                    <div className="flex items-center px-2 text-gray-300 text-sm">
+                        From : &nbsp;
+                        <input
+                        className="bg-transparent text-gray-100 outline-none ml-1"
+                        type="datetime-local"
+                        value={tempStartDate}
+                        onChange={(e) => setTempStartDate(e.target.value)}
+                        />
+                    </div>
+                    </div>
+
+                <div className="h-5.5 bg-gradient-to-r from-gray-700 via-gray-750 to-gray-800 border border-gray-700 rounded-xl px-0 py-0 w-[250px] sm:w-[250px]">
+                    <div className="flex items-center px-2 text-gray-300 text-sm">
+                     To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:   &nbsp;
+                <input
+                    type="datetime-local"
+                    value={tempEndDate}
+                    onChange={(e) => setTempEndDate(e.target.value)}
+                />
+                </div>
+                </div>
+
+                
+                 <button
+                    onClick={() => {
+                        setDataMode("custom");
+                        setStartDate(tempStartDate);
+                        setEndDate(tempEndDate);
+                    }}
+                    style={{
+                        background: "linear-gradient(135deg, #34d399, #10b981)",
+                        border: "none",
+                        borderRadius: 8,
+                        padding: "1px 8px",
+                        color: "#022c22",
+                        fontWeight: 600,
+                        boxShadow: "0 4px 14px rgba(16,185,129,0.4)",
+                        cursor: "pointer"
+                    }}
+                    >
+                    Get Data
+                    </button>
+                                    
+
+                <button
+                    onClick={() => {
+                        setDataMode("custom");
+                        setStartDate(tempStartDate);
+                        setEndDate(tempEndDate);
+                    }}
+                    
+                ></button>
+
+                
+                
                 </div>
                 <div
                     style={{
                         position: "absolute",
-                        top: 45,
-                        right: 15,
-                        zIndex: 9999,
+                        top: isMobile?87:65.5,
+                        right: 16,
+                        zIndex: 1,
                     }}
                 >
                     <button
@@ -551,29 +732,50 @@ useEffect(() => {
                 
             </div>
 
-            <div style={{ width: "100%", height: chartHeight }}>
-                <ResponsiveContainer width="100%" height="100%">
+
+            <div
+            style={{
+                width: "100%",
+                height: isMobile?chartHeight+65:chartHeight+25,
+                position: "relative",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.25))",
+                borderRadius: 16,
+                padding: 14,
+                paddingBottom:isMobile?80:20,
+                border: "1px solid rgba(255,255,255,0.08)",
+                backdropFilter: "blur(12px)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.35)",
+                zIndex: 1
+            }}
+            >
+            <ResponsiveContainer width="100%" height="100%">
                     <AreaChart 
                         data={data}
-                        margin={{ top: 8, right: 10, left: -28, bottom: 10 }}
+                        margin={{ top: 8, right: 10, left: -28, bottom: 30 }}
+                        
                     >
 
                     <defs>
                     {topics.map((t) => (
                         <linearGradient key={t} id={`grad-${t}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={colors[t as TopicKey]} stopOpacity={0.25} />
+                        <stop offset="0%" stopColor={colors[t as TopicKey]} stopOpacity={0.18} />
                         <stop offset="100%" stopColor={colors[t as TopicKey]} stopOpacity={0} />
                         </linearGradient>
                     ))}
                     </defs>
                     
+                    <CartesianGrid
+                    stroke="rgba(255,255,255,0.08)"
+                    strokeDasharray="3 3"
+                    />
+
                     <XAxis
                         dataKey="ts"
                         type="number"
                         scale="time"
-                        domain={mode === "realtime" ? realtimeDomain : ["dataMin", "dataMax"]}
-                        ticks={mode === "realtime" ? undefined : generateTimeTicks(data, mode)}
-                        tickCount={mode === "realtime" ? 6 : undefined}
+                        domain={dataMode === "realtime" ? realtimeDomain : ["dataMin", "dataMax"]}
+                        ticks={dataMode === "realtime" ? undefined : generateTimeTicks(data, dataMode)}
+                        tickCount={dataMode === "realtime" ? 6 : undefined}
                         tickFormatter={(ts) => {
                             const d = new Date(ts);
                             return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
@@ -586,13 +788,14 @@ useEffect(() => {
                             tick={{ fill: "#ffffff",fontSize: axisFontSize }}
                         />
                         <Tooltip
-                        
                             contentStyle={{
-                                background:"none", //"rgba(20,20,20,0.95)",
-                                border: "none",//"0.5px solid rgba(255,255,255,0.08)",//
-                                borderRadius: 8,
+                                background: "rgba(15,23,42,0.9)",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                                borderRadius: 5,
+                                fontSize: 11,
+                                backdropFilter: "blur(8px)",
                                 color: "#fff",
-                                fontSize: "13px"
+                                boxShadow: "0 12px 25px rgba(0,0,0,0.5)"
                             }}
                             labelFormatter={(label) => {
                                 const ts = Number(label);
@@ -613,11 +816,11 @@ useEffect(() => {
                             visibleTopics[t as TopicKey] && (
                                 <Area
                                     key={t}
-                                    type="linear"
+                                    type="monotone"
                                     dataKey={t}
                                     name={topicLabels[t as TopicKey]}
                                     stroke={colors[t as TopicKey]}
-                                    strokeWidth={1}
+                                    strokeWidth={1.2}
                                     fill={`url(#grad-${t})`}
                                     fillOpacity={0.8}
                                     isAnimationActive={false}
@@ -627,111 +830,82 @@ useEffect(() => {
                             )
                         ))}
                     </AreaChart>
-                   
+                    
+
+                
                 </ResponsiveContainer>
+                {/* BUTTON MODE */}
+           <div
+            style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 16,
+                marginTop: -33,
+                position: "relative",
+                zIndex: 10,
+                flexWrap: "wrap", // biar aman di mobile
+            }}
+            >
+
+            {/* ✅ MODE (KIRI) */}
+            <div
+                style={{
+                display: "inline-flex",
+                background: "rgba(255,255,255,0.06)",
+                borderRadius: 12,
+                padding: 4,
+                border: "1px solid rgba(255,255,255,0.1)",
+                backdropFilter: "blur(8px)",
+                gap: 4,
+                }}
+            >
+                {modeButton("realtime", "Live")}
+                {modeButton("1h", "1h")}
+                {modeButton("6h", "6h")}
+                {modeButton("12h", "12h")}
+                {modeButton("1d", "1d")}
+                {modeButton("3d", "3d")}
             </div>
-            {/* BUTTON MODE */}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <button
-                    onClick={() => setMode("realtime")}
-                    style={{
-                        ...buttonStyle,
-                        background: mode === "realtime" ? "#1677ff" : "transparent",
-                        color: mode === "realtime" ? "#fff" : "#fff",
-                    }}
-                >
-                    Live
-                </button>
 
-                <button
-                    onClick={() => setMode("1h")}
-                    style={{
-                        ...buttonStyle,
-                        background: mode === "1h" ? "#1677ff" : "transparent",
-                        color: mode === "1h" ? "#fff" : "#fff",
-                    }}
-                >
-                    1h
-                </button>
+            {/* ✅ VISIBLE LINE (KANAN - TIDAK DIUBAH) */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ fontSize: 12 }}>VL :</div>
 
-                <button
-                    onClick={() => setMode("6h")}
-                    style={{
-                        ...buttonStyle,
-                        background: mode === "6h" ? "#1677ff" : "transparent",
-                        color: mode === "6h" ? "#fff" : "#fff",
-                    }}
-                >
-                    6h
-                </button>
+                <div className="flex gap-2 flex-wrap">
+                {topics.map((t) => {
+                    const key = t as TopicKey;
+                    const isOn = visibleTopics[key];
 
-                <button
-                    onClick={() => setMode("12h")}
-                    style={{
-                        ...buttonStyle,
-                        background: mode === "12h" ? "#1677ff" : "transparent",
-                        color: mode === "12h" ? "#fff" : "#fff",
-                    }}
-                >
-                    12h
-                </button>
-
-                <button
-                    onClick={() => setMode("1d")}
-                    style={{
-                        ...buttonStyle,
-                        background: mode === "1d" ? "#1677ff" : "transparent",
-                        color: mode === "1d" ? "#fff" : "#fff",
-                    }}
-                >
-                    1d
-                </button>
-
-                <button
-                    onClick={() => setMode("3d")}
-                    style={{
-                        ...buttonStyle,
-                        background: mode === "3d" ? "#1677ff" : "transparent",
-                        color: mode === "3d" ? "#fff" : "#fff",
-                    }}
-                >
-                    3d
-                </button>
-
-                {/* SPACER */}
-                <div style={{ width: 10 }} />
-                <div style={{ padding: "6px",fontSize: 12, fontWeight: 400,alignItems: "center"}}> Visible Line :</div>
-
-                {/* TOGGLE BUTTON */}
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    {topics.map((t) => {
-                        const key = t as TopicKey;
-
-                        return (
-                            <button
-                                key={t}
-                                onClick={() => toggleTopic(key)}
-                                style={{
-                                    ...buttonStyle,
-                                    background: visibleTopics[key] ? colors[key] : "transparent",
-                                    color: visibleTopics[key] ? "#000" : "#fff",
-                                    cursor: "pointer",
-                                    fontSize: "12px",
-                                    fontWeight: 400,  
-                                }}
-                            >
-                                {topicLabels[key]} {visibleTopics[key]}
-                            </button>
-                        );
-                    })}
+                    return (
+                    <button
+                        key={t}
+                        onClick={() => toggleTopic(key)}
+                        style={{
+                            background: isOn ? "#022c22" : "transparent",
+                            color: isOn ? colors[key] : "#ccc",
+                            border: `1px solid ${isOn ? colors[key] : "#4b5563"}`,
+                            padding: "6px 12px",
+                            fontSize: 12,
+                            borderRadius: 8,
+                            cursor: "pointer",
+                            transition: "all 0.2s ease",
+                        }}
+                        >
+                        {topicLabels[key]}
+                        </button>
+                    );
+                })}
                 </div>
             </div>
 
+            </div>
+            </div>
+            
 
             
 
             {loadingHistory && (
-                <div style={{ marginTop: 10, fontSize: 13, color: "#666" }}>
+                <div style={{ marginTop: 2, fontSize: 13, color: "#666" }}>
                     Loading history...
                 </div>
             )}
