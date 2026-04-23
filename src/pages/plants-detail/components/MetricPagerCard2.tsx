@@ -44,8 +44,22 @@ export default function MetricPagerCard({
       style={{ background: cardBg, borderColor: border }}
     >
       {/* Header */}
-      <div className="p-4 pb-3">
+      <div
+          style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.01))",
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+          height: "55px",
+          padding: "6px 14px",
+          display: "block",
+          width: "100%", 
+          backdropFilter: "blur(6px)",
+          border: "1px solid rgba(255,255,255,0.1)"
+          }}
+                    >
         <div className="flex items-center justify-between gap-3">
+          
           <div className="text-white font-extrabold text-base">
             {title}
           </div>
