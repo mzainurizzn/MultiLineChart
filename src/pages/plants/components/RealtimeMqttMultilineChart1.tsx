@@ -12,6 +12,11 @@ import {
     ResponsiveContainer,
 } from "recharts";
 
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import { FileSpreadsheet } from "lucide-react";
+
+
 type MqttPayload =
     | number
     | string
@@ -231,7 +236,51 @@ RealtimeMqttLineChartProps) {
     const [endDate, setEndDate] = useState("");
     const isCustom = dataMode === "custom";
     const isRealtime = dataMode === "realtime";
-    //
+
+    // Export Excel DATA //
+
+    const exportToExcel = () => {
+    if (!data.length) return;
+
+    // format data supaya rapi di Excel
+    const formatted = data.map((row) => {
+        const base: any = {
+            Time: new Date(row.ts).toLocaleString(),
+        };
+
+        const topicMap: Record<string, string> = {
+            "AMG/Speed/Line1": "M1",
+            "AMG/Speed/Line6": "M6",
+            "AMG/Speed/Line11": "M11",
+        };
+
+        topics.forEach((t) => {
+            const label = topicMap[t] ?? t;
+            base[label] = row[t] ?? 0;
+        });
+
+        return base;
+    });
+
+    // buat worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formatted);
+
+    // buat workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Line Speed");
+
+    // convert ke buffer
+    const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+    });
+
+    const file = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+
+    saveAs(file, `Line_Speed_${Date.now()}.xlsx`);
+    };
     const [visibleTopics, setVisibleTopics] = useState<Record<TopicKey, boolean>>({
         "AMG/Speed/Line1": true,
         "AMG/Speed/Line6": true,
@@ -628,7 +677,7 @@ useEffect(() => {
                     </div>
                     
 
-                    <div style={{ display: "flex", gap: 12, fontSize: 13, flexWrap: "wrap",paddingTop:8,paddingLeft:6 }}>
+                    <div style={{ display: "flex", gap: 10  , fontSize: 13, flexWrap: "wrap",paddingTop:8,paddingLeft:6 }}>
                 
                     <div>
                     <b style={{ color: "#facc15" }}>Mode :</b> {dataMode}
@@ -662,35 +711,59 @@ useEffect(() => {
                 </div>
 
                 
-                 <button
-                    onClick={() => {
-                        setDataMode("custom");
-                        setStartDate(tempStartDate);
-                        setEndDate(tempEndDate);
-                    }}
+                 <div
                     style={{
-                        background: "linear-gradient(135deg, #34d399, #10b981)",
-                        border: "none",
-                        borderRadius: 8,
-                        padding: "1px 8px",
-                        color: "#022c22",
-                        fontWeight: 600,
-                        boxShadow: "0 4px 14px rgba(16,185,129,0.4)",
-                        cursor: "pointer"
+                        display: "flex",
+                        gap: 10,
+                        alignItems: "center",
+                        flexWrap: "wrap",
                     }}
+                >
+                    {/* GET DATA BUTTON */}
+                    <button
+                        onClick={() => {
+                            setDataMode("custom");
+                            setStartDate(tempStartDate);
+                            setEndDate(tempEndDate);
+                        }}
+                        style={{
+                            background: "linear-gradient(135deg, #34d399, #10b981)",
+                            border: "none",
+                            borderRadius: 5,
+                            padding: "1px 8px",
+                            color: "#022c22",
+                            fontWeight: 600,
+                            boxShadow: "0 4px 14px rgba(16,185,129,0.4)",
+                            cursor: "pointer",
+                            fontSize: 12,
+                        }}
                     >
-                    Get Data
+                        Get Data
                     </button>
-                                    
 
-                <button
-                    onClick={() => {
-                        setDataMode("custom");
-                        setStartDate(tempStartDate);
-                        setEndDate(tempEndDate);
-                    }}
-                    
-                ></button>
+                    {/* EXPORT EXCEL BUTTON */}
+                    <button
+                        onClick={exportToExcel}
+                        style={{
+                            padding: "1px 8px",
+                            borderRadius: 5,
+                            border: "1px",
+                            borderColor:"#10b981",
+                            cursor: "pointer",
+                            background: "linear-gradient(90deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6))",
+                            color: "black",
+                            fontWeight: 600,
+                            boxShadow: "0 4px 14px rgba(96,165,250,0.4)",
+                            fontSize: 12,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                        }}
+                    >
+                        <FileSpreadsheet size={14} color="#0F9D58" />
+                        Export
+                    </button>
+                </div>
 
                 
                 
